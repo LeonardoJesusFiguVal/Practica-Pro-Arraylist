@@ -35,6 +35,7 @@ public class Main {
         String grupoEnUso= new String();
         String nombreAlumno= new String();
         int posAlumno= -1;
+        String auxOrden= new String();
 
         do {
             System.out.println("Que ejercicio quiere realizar?(-1 para salir del programa)");
@@ -154,6 +155,7 @@ public class Main {
 
                         System.out.println("-------------------------------------------");
                         do {
+                            //Se piden nuevas ordenes
                             System.out.println("Que quieres hcaer con "+grupoEnUso+"?\n1- Dar alta a un alumno\n2- Dar baja a un alumno" +
                                     "\n3- Cambiar el nombre de un alumno\n4- Mostrar la lista de alumnos\n5- Mostrar las plazas bacantes\n6- Salir");
 
@@ -169,14 +171,76 @@ public class Main {
                                 entrance.nextLine();
                             }
 
+                            //Ordenar las listas usando el metodo burbuja
+                            if (daw1.size() > 1){
+                                if (daw1.size() == 2){
+                                    if (daw1.get(0).compareTo(daw1.get(1)) > 0){
+                                        auxOrden= daw1.get(0);
+                                        daw1.set(0, daw1.get(1));
+                                        daw1.set(1, auxOrden);
+                                    }
+                                }
+                                else {
+                                    for (int i = 0; i < daw1.size() - 1; i++) {
+                                        for (int j = 0; j < daw1.size() - i - 1; j++) {
+                                            if (daw1.get(j).compareTo(daw1.get(j+1)) > 0){
+                                                auxOrden= daw1.get(j);
+                                                daw1.set(j, daw1.get(j+1));
+                                                daw1.set(j+1, auxOrden);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (daw2.size() > 1){
+                                if (daw2.size() == 2){
+                                    if (daw2.get(0).compareTo(daw2.get(1)) > 0){
+                                        auxOrden= daw2.get(0);
+                                        daw2.set(0, daw2.get(1));
+                                        daw2.set(1, auxOrden);
+                                    }
+                                }
+                                else {
+                                    for (int i = 0; i < daw2.size() - 1; i++) {
+                                        for (int j = 0; j < daw2.size() - i - 1; j++) {
+                                            if (daw2.get(j).compareTo(daw2.get(j+1)) > 0){
+                                                auxOrden= daw2.get(j);
+                                                daw2.set(j, daw2.get(j+1));
+                                                daw2.set(j+1, auxOrden);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (dam1.size() > 1){
+                                if (dam1.size() == 2){
+                                    if (dam1.get(0).compareTo(dam1.get(1)) > 0){
+                                        auxOrden= dam1.get(0);
+                                        dam1.set(0, dam1.get(1));
+                                        dam1.set(1, auxOrden);
+                                    }
+                                }
+                                else {
+                                    for (int i = 0; i < dam1.size() - 1; i++) {
+                                        for (int j = 0; j < dam1.size() - i - 1; j++) {
+                                            if (dam1.get(j).compareTo(dam1.get(j+1)) > 0){
+                                                auxOrden= dam1.get(j);
+                                                dam1.set(j, dam1.get(j+1));
+                                                dam1.set(j+1, auxOrden);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
                             switch (controller){
+                                //Salir del grupo
                                 case 6:
                                     System.out.println("Saliendo!");
                                     keyEj3= false;
                                     controller= Integer.MAX_VALUE;
                                     break;
-
+                                //Dar alta alumno
                                 case 1:
                                     if (grupoEnUso.equals("1ºDAW")){
                                         if (daw1.size()<30){
@@ -212,15 +276,16 @@ public class Main {
                                         }
                                     }
                                     break;
-
+                                //Dar baja alumno
                                 case 2:
+                                    posAlumno= -1;
                                     System.out.println("Introduce el nombre del alumno que quieres dar de baja:");
                                     nombreAlumno= entrance.nextLine();
                                     if (grupoEnUso.equals("1ºDAW")){
-                                        if (daw1.size()< 1){
+                                        if (daw1.isEmpty()){
                                             System.out.println("No puedes eliminar alumnos, porque en este curso no hay alumnos");
                                         }
-                                        else if (daw1.size() < 2){
+                                        else if (daw1.size() == 1){
                                             if (daw1.get(0).equals(nombreAlumno)){
                                                 daw1.clear();
                                                 System.out.println("Alumno dado de baja, ya no hay alumnos en el curso!");
@@ -230,7 +295,6 @@ public class Main {
                                             }
                                         }
                                         else {
-                                            posAlumno= -1;
                                             for (int i = 0; i < daw1.size(); i++) {
                                                 if (daw1.get(i).equals(nombreAlumno)){
                                                     posAlumno= i;
@@ -242,10 +306,10 @@ public class Main {
                                         }
                                     }
                                     else if (grupoEnUso.equals("2ºDAW")){
-                                        if (daw2.size()< 1){
+                                        if (daw2.isEmpty()){
                                             System.out.println("No puedes eliminar alumnos, porque en este curso no hay alumnos");
                                         }
-                                        else if (daw2.size() < 2){
+                                        else if (daw2.size() == 1){
                                             if (daw2.get(0).equals(nombreAlumno)){
                                                 daw2.clear();
                                                 System.out.println("Alumno dado de baja, ya no hay alumnos en el curso!");
@@ -255,7 +319,6 @@ public class Main {
                                             }
                                         }
                                         else {
-                                            posAlumno= -1;
                                             for (int i = 0; i < daw2.size(); i++) {
                                                 if (daw2.get(i).equals(nombreAlumno)){
                                                     posAlumno= i;
@@ -267,10 +330,10 @@ public class Main {
                                         }
                                     }
                                     else {
-                                        if (dam1.size()< 1){
+                                        if (dam1.isEmpty()){
                                             System.out.println("No puedes eliminar alumnos, porque en este curso no hay alumnos");
                                         }
-                                        else if (dam1.size() < 2){
+                                        else if (dam1.size() == 1){
                                             if (dam1.get(0).equals(nombreAlumno)){
                                                 dam1.clear();
                                                 System.out.println("Alumno dado de baja, ya no hay alumnos en el curso!");
@@ -280,7 +343,6 @@ public class Main {
                                             }
                                         }
                                         else {
-                                            posAlumno= -1;
                                             for (int i = 0; i < dam1.size(); i++) {
                                                 if (dam1.get(i).equals(nombreAlumno)){
                                                     posAlumno= i;
@@ -292,19 +354,61 @@ public class Main {
                                         }
                                     }
                                     break;
-
+                                //Cambiar nombre alumno
                                 case 3:
+                                    posAlumno= -1;
+                                    System.out.println("A que alumno le quieres cambiar el nombre:");
+                                    nombreAlumno= entrance.nextLine();
                                     if (grupoEnUso.equals("1ºDAW")){
-
+                                        for (int i = 0; i < daw1.size(); i++) {
+                                            if (nombreAlumno.trim().equals(daw1.get(i))){
+                                                posAlumno= i;
+                                            }
+                                        }
+                                        if (posAlumno != -1){
+                                            System.out.println("A que nombre quieres cambiarlo?");
+                                            nombreAlumno= entrance.nextLine();
+                                            daw1.set(posAlumno, nombreAlumno.trim());
+                                            System.out.println("Nombre cambiado!");
+                                        }
+                                        else {
+                                            System.out.println("El alumno no existe dentro del programa");
+                                        }
                                     }
                                     else if (grupoEnUso.equals("2ºDAW")){
-
+                                        for (int i = 0; i < daw2.size(); i++) {
+                                            if (nombreAlumno.trim().equals(daw2.get(i))){
+                                                posAlumno= i;
+                                            }
+                                        }
+                                        if (posAlumno != -1){
+                                            System.out.println("A que nombre quieres cambiarlo?");
+                                            nombreAlumno= entrance.nextLine();
+                                            daw2.set(posAlumno, nombreAlumno.trim());
+                                            System.out.println("Nombre cambiado!");
+                                        }
+                                        else {
+                                            System.out.println("El alumno no existe dentro del programa");
+                                        }
                                     }
                                     else {
-
+                                        for (int i = 0; i < dam1.size(); i++) {
+                                            if (nombreAlumno.trim().equals(dam1.get(i))){
+                                                posAlumno= i;
+                                            }
+                                        }
+                                        if (posAlumno != -1){
+                                            System.out.println("A que nombre quieres cambiarlo?");
+                                            nombreAlumno= entrance.nextLine();
+                                            dam1.set(posAlumno, nombreAlumno.trim());
+                                            System.out.println("Nombre cambiado!");
+                                        }
+                                        else {
+                                            System.out.println("El alumno no existe dentro del programa");
+                                        }
                                     }
                                     break;
-
+                                //Mostrar lista alumnos
                                 case 4:
                                     if (grupoEnUso.equals("1ºDAW")){
                                         if (daw1.size()>0){
@@ -337,7 +441,7 @@ public class Main {
                                         }
                                     }
                                     break;
-
+                                //Mostrar plazas bacantes curso
                                 case 5:
                                     if (grupoEnUso.equals("1ºDAW")){
                                         if (daw1.size()>0){
@@ -364,11 +468,12 @@ public class Main {
                                         }
                                     }
                                     break;
-
+                                //Instruccion no valida
                                 default:
                                     System.out.println("No se reconoce la orden");
                             }
 
+                            //Evitar que termine el
                             if (keyEj3){
                                 System.out.println("-------------------------------------------");
                             }
@@ -382,6 +487,7 @@ public class Main {
 
                     }while (keyEj3);
                     break;
+
                 //Salir del programa
                 case -1:
                     key= false;
