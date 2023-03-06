@@ -1,6 +1,5 @@
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
+import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -16,6 +15,8 @@ public class Main {
         Scanner entrance= new Scanner(System.in);
         boolean key= true;
         int nav;
+        boolean sKey= true;
+        int controller= 0;
 
         //Declaraciones ejercicio 1
         ArrayList<Double> temperaturasMeses= new ArrayList<Double>();
@@ -24,29 +25,29 @@ public class Main {
         double inputTemp= 0;
 
         //Decalraciones ejercicio 2
+        ArrayList<Integer> mesas= new ArrayList<Integer>();
+        int numClientes= 0;
+        boolean compMesa= false;
+        int numMesa= 0;
+
 
         //Declaraciones ejercicio 3
-        boolean keyEj3= true;
         ArrayList<String> daw1= new ArrayList<String>();
         ArrayList<String> daw2= new ArrayList<String>();
         ArrayList<String> dam1= new ArrayList<String>();
-        int controller;
         String nomGrupos[]= new String[] {"1ºDAW", "2ºDAW", "1ºDAM"};
         String grupoEnUso= new String();
         String nombreAlumno= new String();
         int posAlumno= -1;
         String auxOrden= new String();
 
+
         do {
             System.out.println("Que ejercicio quiere realizar?(-1 para salir del programa)");
             try{
                 nav= Integer.parseInt(entrance.nextLine());
             }
-            catch (InputMismatchException e){
-                nav= Integer.MIN_VALUE;
-                entrance.nextLine();
-            }
-            catch (NumberFormatException e){
+            catch (RuntimeException e){
                 nav= Integer.MIN_VALUE;
                 entrance.nextLine();
             }
@@ -55,7 +56,6 @@ public class Main {
             switch (nav){
                 //Ejercicio 1
                 case 1:
-                    //Limpiamis la Arraylis, por si se repite el ejercicio
                     temperaturasMeses.clear();
 
                     System.out.println("Ejercicio 1");
@@ -66,13 +66,7 @@ public class Main {
                         try {
                             inputTemp= Double.parseDouble(entrance.nextLine());
                         }
-                        catch (InputMismatchException e){
-                            inputTemp= Integer.MIN_VALUE;
-                            entrance.nextLine();
-                            i--;
-                            System.out.println("ERROR, No se reconoce ese valor, intentelo de nuevo");
-                        }
-                        catch (NumberFormatException e){
+                        catch (RuntimeException e){
                             inputTemp= Integer.MIN_VALUE;
                             entrance.nextLine();
                             i--;
@@ -102,10 +96,138 @@ public class Main {
                     break;
                 //Ejercicio 2
                 case 2:
+                    mesas.clear();
+                    sKey= true;
+
                     System.out.println("Ejercicio 2");
+
+
+                    //Añadimos 5 comensales
+                    for (int i = 0; i < 5; i++) {
+                        mesas.add((int) (Math.random()*5));
+                    }
+
+                    //Empieza el menu
+                    System.out.println("Bienvenido!");
+                    do {
+                        System.out.println("Que quieres hacer?");
+                        System.out.println("1- Mostrar mesas actuales\n2- Pedir mesa\n3- Salir");
+                        try{
+                            controller= Integer.parseInt(entrance.nextLine());
+                        }
+                        catch (RuntimeException e){
+                            controller= Integer.MIN_VALUE;
+                            entrance.nextLine();
+                        }
+
+                        switch (controller){
+                            //Salir del programa
+                            case 3:
+                                sKey= false;
+                                System.out.println("Adios!");
+                                break;
+
+                            //Mostrar mesas
+                            case 1:
+                                System.out.print("| Num mesa     ");
+                                for (int i = 1; i <= mesas.size(); i++) {
+                                    System.out.print("| "+i+" ");
+                                }
+                                System.out.print("|\n| Num clientes ");
+                                for (int i = 0; i < mesas.size(); i++) {
+                                    if (i<9){
+                                        System.out.print("| "+mesas.get(i)+" ");
+                                    }
+                                    else {
+                                        System.out.print("| "+mesas.get(i)+"  ");
+                                    }
+                                }
+                                System.out.println("|");
+                                break;
+
+                            //Pedir mesa
+                            case 2:
+                                compMesa= false;
+
+                                if (mesas.size()<15){
+
+                                    //Pedimos el número
+                                    System.out.println("Introduce el numero de personas que son:");
+                                    try{
+                                        numClientes= Integer.parseInt(entrance.nextLine());
+                                    }
+                                    catch (RuntimeException e){
+                                        numClientes= Integer.MIN_VALUE;
+                                        entrance.nextLine();
+                                    }
+
+                                    //Comprobamos el número de comensales introducidos
+                                    if (numClientes == Integer.MIN_VALUE){
+                                        System.out.println("ERROR, no se reconoce ese valor");
+                                    }
+                                    else if (numClientes<1){
+                                        System.out.println("El número minimo de clientes debe de ser 1");
+                                    }
+                                    else if (numClientes>4){
+                                        System.out.println("Lo siento, no admitimos grupos de "+numClientes+", haga grupos de 4 personas como máximo e intente de nuevo”");
+                                    }
+                                    else {
+
+                                        //Buscamos si hay sitio libre y asignamos el sitio
+                                        for (int i = 0; i < mesas.size(); i++) {
+                                            if (mesas.get(i)+numClientes <= 4){
+                                                mesas.set(i, mesas.get(i)+numClientes);
+                                                compMesa= true;
+                                                System.out.println("Sientense en la mesa Nº"+(i+1));
+                                                break;
+                                            }
+                                        }
+
+                                        //Si no hay sitio libre se introduce una nueva mesa
+                                        if (!compMesa){
+                                            System.out.println("No le hemos podido encontrar mesa, le pondremos una");
+                                            mesas.add(numClientes);
+                                        }
+
+                                        //Mostramos las mesas
+                                        System.out.print("| Num mesa     ");
+                                        for (int i = 1; i <= mesas.size(); i++) {
+                                            System.out.print("| "+i+" ");
+                                        }
+                                        System.out.print("|\n| Num clientes ");
+                                        for (int i = 0; i < mesas.size(); i++) {
+                                            if (i<9){
+                                                System.out.print("| "+mesas.get(i)+" ");
+                                            }
+                                            else {
+                                                System.out.print("| "+mesas.get(i)+"  ");
+                                            }
+                                        }
+                                        System.out.println("|");
+                                    }
+                                }
+                                else {
+                                    System.out.println("No queda hueco en el restaurante, intentelo de nuevo más tarde");
+                                }
+
+                                break;
+
+                            //Instruccion invalida
+                            default:
+                                System.out.println("No se reconoce esa orden");
+                        }
+
+                    }while (sKey);
+
                     break;
                 //Ejercicio 3
                 case 3:
+                    controller= 0;
+                    daw1.clear();
+                    daw2.clear();
+                    dam1.clear();
+                    sKey= true;
+
                     System.out.println("Ejercicio 3");
 
                     //Inicio del programa
@@ -115,11 +237,7 @@ public class Main {
                         try{
                             controller= Integer.parseInt(entrance.nextLine());
                         }
-                        catch (InputMismatchException e){
-                            controller= Integer.MIN_VALUE;
-                            entrance.nextLine();
-                        }
-                        catch (NumberFormatException e){
+                        catch (RuntimeException e){
                             controller= Integer.MIN_VALUE;
                             entrance.nextLine();
                         }
@@ -129,7 +247,7 @@ public class Main {
 
                             case 4:
                                 System.out.println("Adios!");
-                                keyEj3= false;
+                                sKey= false;
                                 continue;
 
                             case 1:
@@ -162,82 +280,83 @@ public class Main {
                             try{
                                 controller= Integer.parseInt(entrance.nextLine());
                             }
-                            catch (InputMismatchException e){
-                                controller= Integer.MIN_VALUE;
-                                entrance.nextLine();
-                            }
-                            catch (NumberFormatException e){
+                            catch (RuntimeException e){
                                 controller= Integer.MIN_VALUE;
                                 entrance.nextLine();
                             }
 
                             //Ordenar las listas usando el metodo burbuja
-                            if (daw1.size() > 1){
-                                if (daw1.size() == 2){
-                                    if (daw1.get(0).compareTo(daw1.get(1)) > 0){
-                                        auxOrden= daw1.get(0);
-                                        daw1.set(0, daw1.get(1));
-                                        daw1.set(1, auxOrden);
-                                    }
-                                }
-                                else {
-                                    for (int i = 0; i < daw1.size() - 1; i++) {
-                                        for (int j = 0; j < daw1.size() - i - 1; j++) {
-                                            if (daw1.get(j).compareTo(daw1.get(j+1)) > 0){
-                                                auxOrden= daw1.get(j);
-                                                daw1.set(j, daw1.get(j+1));
-                                                daw1.set(j+1, auxOrden);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (daw2.size() > 1){
-                                if (daw2.size() == 2){
-                                    if (daw2.get(0).compareTo(daw2.get(1)) > 0){
-                                        auxOrden= daw2.get(0);
-                                        daw2.set(0, daw2.get(1));
-                                        daw2.set(1, auxOrden);
-                                    }
-                                }
-                                else {
-                                    for (int i = 0; i < daw2.size() - 1; i++) {
-                                        for (int j = 0; j < daw2.size() - i - 1; j++) {
-                                            if (daw2.get(j).compareTo(daw2.get(j+1)) > 0){
-                                                auxOrden= daw2.get(j);
-                                                daw2.set(j, daw2.get(j+1));
-                                                daw2.set(j+1, auxOrden);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (dam1.size() > 1){
-                                if (dam1.size() == 2){
-                                    if (dam1.get(0).compareTo(dam1.get(1)) > 0){
-                                        auxOrden= dam1.get(0);
-                                        dam1.set(0, dam1.get(1));
-                                        dam1.set(1, auxOrden);
-                                    }
-                                }
-                                else {
-                                    for (int i = 0; i < dam1.size() - 1; i++) {
-                                        for (int j = 0; j < dam1.size() - i - 1; j++) {
-                                            if (dam1.get(j).compareTo(dam1.get(j+1)) > 0){
-                                                auxOrden= dam1.get(j);
-                                                dam1.set(j, dam1.get(j+1));
-                                                dam1.set(j+1, auxOrden);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+//                            if (daw1.size() > 1){
+//                                if (daw1.size() == 2){
+//                                    if (daw1.get(0).compareTo(daw1.get(1)) > 0){
+//                                        auxOrden= daw1.get(0);
+//                                        daw1.set(0, daw1.get(1));
+//                                        daw1.set(1, auxOrden);
+//                                    }
+//                                }
+//                                else {
+//                                    for (int i = 0; i < daw1.size() - 1; i++) {
+//                                        for (int j = 0; j < daw1.size() - i - 1; j++) {
+//                                            if (daw1.get(j).compareTo(daw1.get(j+1)) > 0){
+//                                                auxOrden= daw1.get(j);
+//                                                daw1.set(j, daw1.get(j+1));
+//                                                daw1.set(j+1, auxOrden);
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            if (daw2.size() > 1){
+//                                if (daw2.size() == 2){
+//                                    if (daw2.get(0).compareTo(daw2.get(1)) > 0){
+//                                        auxOrden= daw2.get(0);
+//                                        daw2.set(0, daw2.get(1));
+//                                        daw2.set(1, auxOrden);
+//                                    }
+//                                }
+//                                else {
+//                                    for (int i = 0; i < daw2.size() - 1; i++) {
+//                                        for (int j = 0; j < daw2.size() - i - 1; j++) {
+//                                            if (daw2.get(j).compareTo(daw2.get(j+1)) > 0){
+//                                                auxOrden= daw2.get(j);
+//                                                daw2.set(j, daw2.get(j+1));
+//                                                daw2.set(j+1, auxOrden);
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            if (dam1.size() > 1){
+//                                if (dam1.size() == 2){
+//                                    if (dam1.get(0).compareTo(dam1.get(1)) > 0){
+//                                        auxOrden= dam1.get(0);
+//                                        dam1.set(0, dam1.get(1));
+//                                        dam1.set(1, auxOrden);
+//                                    }
+//                                }
+//                                else {
+//                                    for (int i = 0; i < dam1.size() - 1; i++) {
+//                                        for (int j = 0; j < dam1.size() - i - 1; j++) {
+//                                            if (dam1.get(j).compareTo(dam1.get(j+1)) > 0){
+//                                                auxOrden= dam1.get(j);
+//                                                dam1.set(j, dam1.get(j+1));
+//                                                dam1.set(j+1, auxOrden);
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+
+                            //Ordenar las arraylist
+                            Collections.sort(daw1);
+                            Collections.sort(daw2);
+                            Collections.sort(dam1);
 
                             switch (controller){
                                 //Salir del grupo
                                 case 6:
                                     System.out.println("Saliendo!");
-                                    keyEj3= false;
+                                    sKey= false;
                                     controller= Integer.MAX_VALUE;
                                     break;
                                 //Dar alta alumno
@@ -473,19 +592,19 @@ public class Main {
                                     System.out.println("No se reconoce la orden");
                             }
 
-                            //Evitar que termine el
-                            if (keyEj3){
+                            //Evitar que termine el ejercicio
+                            if (sKey){
                                 System.out.println("-------------------------------------------");
                             }
-                        }while (keyEj3);
+                        }while (sKey);
 
 
                         if (controller == Integer.MAX_VALUE){
-                            keyEj3= true;
+                            sKey= true;
                         }
                         System.out.println("-------------------------------------------");
 
-                    }while (keyEj3);
+                    }while (sKey);
                     break;
 
                 //Salir del programa
